@@ -20,182 +20,308 @@ function HeroScene() {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-    camera.position.set(0, 0.2, 7);
+    camera.position.set(0, 0.35, 7.4);
 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
     mount.appendChild(renderer.domElement);
+
     const pointer = new THREE.Vector2(0, 0);
     const targetRotation = new THREE.Vector2(0, 0);
+    const roomGroup = new THREE.Group();
+    scene.add(roomGroup);
 
-    const pinkLight = new THREE.PointLight(0xff4fb8, 4, 18);
-    pinkLight.position.set(-3, 2.5, 4);
-    scene.add(pinkLight);
+    const tracked = [];
+    const remember = (item) => {
+      tracked.push(item);
+      return item;
+    };
 
-    const cyanLight = new THREE.PointLight(0x2cf7ff, 2.6, 18);
-    cyanLight.position.set(3, -1.2, 4);
-    scene.add(cyanLight);
+    const material = (options) => remember(new THREE.MeshStandardMaterial(options));
+    const basic = (options) => remember(new THREE.MeshBasicMaterial(options));
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-
-    const makeMaterial = (color, emissive = color, intensity = 0.35) =>
-      new THREE.MeshStandardMaterial({
-        color,
-        emissive,
-        emissiveIntensity: intensity,
-        metalness: 0.45,
-        roughness: 0.28
-      });
-
-    const runnerMaterial = makeMaterial(0xff4fb8, 0x6b0b48, 0.7);
-    const shoeMaterial = makeMaterial(0x2cf7ff, 0x063f45, 0.8);
-    const creamMaterial = makeMaterial(0xffd6ef, 0xff4fb8, 0.35);
-    const coneMaterial = makeMaterial(0xf7c85f, 0x7a4b08, 0.25);
-    const cursorMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      transparent: true,
-      opacity: 0.86
+    const wallMaterial = material({
+      color: 0x111426,
+      emissive: 0x070a16,
+      emissiveIntensity: 0.45,
+      metalness: 0.1,
+      roughness: 0.82
     });
-    const accentGroup = new THREE.Group();
-    scene.add(accentGroup);
-
-    const addRunner = () => {
-      const runner = new THREE.Group();
-      const head = new THREE.Mesh(new THREE.SphereGeometry(0.14, 18, 18), runnerMaterial);
-      head.position.y = 0.55;
-      runner.add(head);
-      const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.08, 0.42, 8, 16), runnerMaterial);
-      torso.position.y = 0.2;
-      torso.rotation.z = -0.18;
-      runner.add(torso);
-      [
-        [-0.24, 0.2, 0.9],
-        [0.24, 0.2, -0.9],
-        [-0.18, -0.28, -0.65],
-        [0.2, -0.28, 0.72]
-      ].forEach(([x, y, zRotation]) => {
-        const limb = new THREE.Mesh(new THREE.CapsuleGeometry(0.035, 0.46, 6, 12), shoeMaterial);
-        limb.position.set(x, y, 0);
-        limb.rotation.z = zRotation;
-        runner.add(limb);
-      });
-      runner.position.set(-2.55, 1.25, 0.4);
-      runner.scale.setScalar(0.95);
-      accentGroup.add(runner);
-      return runner;
-    };
-
-    const addShoe = () => {
-      const shoe = new THREE.Group();
-      const sole = new THREE.Mesh(new THREE.BoxGeometry(0.82, 0.16, 0.26), shoeMaterial);
-      sole.position.y = -0.08;
-      shoe.add(sole);
-      const upper = new THREE.Mesh(new THREE.BoxGeometry(0.54, 0.22, 0.28), runnerMaterial);
-      upper.position.set(-0.06, 0.08, 0);
-      upper.rotation.z = -0.14;
-      shoe.add(upper);
-      const toe = new THREE.Mesh(new THREE.SphereGeometry(0.17, 18, 18), shoeMaterial);
-      toe.scale.set(1.45, 0.68, 0.74);
-      toe.position.set(0.38, 0.01, 0);
-      shoe.add(toe);
-      shoe.position.set(2.55, 1.08, -0.15);
-      shoe.rotation.set(0.24, -0.4, -0.2);
-      accentGroup.add(shoe);
-      return shoe;
-    };
-
-    const addIceCream = () => {
-      const treat = new THREE.Group();
-      const cone = new THREE.Mesh(new THREE.ConeGeometry(0.24, 0.62, 4), coneMaterial);
-      cone.position.y = -0.26;
-      cone.rotation.y = Math.PI / 4;
-      treat.add(cone);
-      const scoop = new THREE.Mesh(new THREE.SphereGeometry(0.3, 24, 24), creamMaterial);
-      scoop.position.y = 0.13;
-      treat.add(scoop);
-      const cherry = new THREE.Mesh(new THREE.SphereGeometry(0.07, 16, 16), runnerMaterial);
-      cherry.position.set(0.08, 0.45, 0.04);
-      treat.add(cherry);
-      treat.position.set(2.75, -1.45, 0.35);
-      treat.rotation.z = 0.25;
-      accentGroup.add(treat);
-      return treat;
-    };
-
-    const runner = addRunner();
-    const shoe = addShoe();
-    const iceCream = addIceCream();
-    const cursorOrb = new THREE.Mesh(new THREE.SphereGeometry(0.07, 18, 18), cursorMaterial);
-    scene.add(cursorOrb);
-
-    const coreGeometry = new THREE.TorusKnotGeometry(1.45, 0.28, 180, 18);
-    const coreMaterial = new THREE.MeshStandardMaterial({
-      color: 0xff62c8,
-      emissive: 0x84145c,
-      emissiveIntensity: 0.8,
-      metalness: 0.72,
+    const floorMaterial = material({
+      color: 0x161728,
+      emissive: 0x080912,
+      emissiveIntensity: 0.35,
+      metalness: 0.22,
+      roughness: 0.54
+    });
+    const deskMaterial = material({
+      color: 0x232235,
+      emissive: 0x0a0a16,
+      emissiveIntensity: 0.35,
+      metalness: 0.38,
+      roughness: 0.32
+    });
+    const blackMaterial = material({
+      color: 0x050711,
+      emissive: 0x02030a,
+      emissiveIntensity: 0.5,
+      metalness: 0.48,
+      roughness: 0.2
+    });
+    const cyanMaterial = material({
+      color: 0x2cf7ff,
+      emissive: 0x2cf7ff,
+      emissiveIntensity: 1.8,
+      metalness: 0.24,
       roughness: 0.18
     });
-    const core = new THREE.Mesh(coreGeometry, coreMaterial);
-    scene.add(core);
-
-    const wireGeometry = new THREE.IcosahedronGeometry(2.55, 1);
-    const wireMaterial = new THREE.MeshBasicMaterial({
+    const pinkMaterial = material({
+      color: 0xff4fb8,
+      emissive: 0xff4fb8,
+      emissiveIntensity: 1.65,
+      metalness: 0.18,
+      roughness: 0.18
+    });
+    const violetMaterial = material({
       color: 0x9b7cff,
+      emissive: 0x9b7cff,
+      emissiveIntensity: 1.55,
+      metalness: 0.18,
+      roughness: 0.2
+    });
+    const screenMaterial = material({
+      color: 0x06131e,
+      emissive: 0x031d2b,
+      emissiveIntensity: 1.1,
+      metalness: 0.15,
+      roughness: 0.26
+    });
+    const medalMaterial = material({
+      color: 0xf7c85f,
+      emissive: 0x8a5d10,
+      emissiveIntensity: 0.55,
+      metalness: 0.7,
+      roughness: 0.22
+    });
+    const glassMaterial = material({
+      color: 0x0b2130,
+      emissive: 0x083349,
+      emissiveIntensity: 0.9,
+      metalness: 0.05,
+      roughness: 0.12,
       transparent: true,
-      opacity: 0.24,
-      wireframe: true
+      opacity: 0.5
     });
-    const wire = new THREE.Mesh(wireGeometry, wireMaterial);
-    scene.add(wire);
-
-    const ringMaterial = new THREE.MeshBasicMaterial({
-      color: 0x2cf7ff,
+    const steamMaterial = basic({
+      color: 0xeefcff,
       transparent: true,
-      opacity: 0.28
+      opacity: 0.44,
+      depthWrite: false
     });
-    const rings = [2.1, 2.8, 3.45].map((radius, index) => {
-      const ring = new THREE.Mesh(new THREE.TorusGeometry(radius, 0.012, 8, 160), ringMaterial);
-      ring.rotation.x = Math.PI / 2.4;
-      ring.rotation.y = index * 0.45;
-      scene.add(ring);
-      return ring;
+    const rainMaterial = basic({
+      color: 0x7defff,
+      transparent: true,
+      opacity: 0.48
     });
 
-    const particleCount = 420;
+    scene.add(new THREE.AmbientLight(0x6d7dff, 0.55));
+
+    const cyanLight = new THREE.PointLight(0x2cf7ff, 4.2, 16);
+    cyanLight.position.set(-2.9, 2.4, 3.2);
+    scene.add(cyanLight);
+
+    const pinkLight = new THREE.PointLight(0xff4fb8, 4.8, 16);
+    pinkLight.position.set(3.1, 1.5, 3.4);
+    scene.add(pinkLight);
+
+    const violetLight = new THREE.PointLight(0x9b7cff, 2.5, 14);
+    violetLight.position.set(0, -1.8, 4.6);
+    scene.add(violetLight);
+
+    const addBox = (size, position, mat, rotation = [0, 0, 0]) => {
+      const mesh = new THREE.Mesh(remember(new THREE.BoxGeometry(...size)), mat);
+      mesh.position.set(...position);
+      mesh.rotation.set(...rotation);
+      roomGroup.add(mesh);
+      return mesh;
+    };
+
+    addBox([6.5, 3.6, 0.08], [0, 0.8, -1.95], wallMaterial);
+    addBox([6.5, 0.08, 3.7], [0, -1.08, -0.12], floorMaterial);
+    addBox([0.08, 3.6, 3.7], [-3.24, 0.8, -0.1], wallMaterial);
+    addBox([0.08, 3.6, 3.7], [3.24, 0.8, -0.1], wallMaterial);
+
+    const desk = addBox([4.4, 0.18, 1.18], [0, -0.42, 0.05], deskMaterial);
+    addBox([0.18, 1.1, 0.18], [-1.9, -1.0, 0.42], deskMaterial);
+    addBox([0.18, 1.1, 0.18], [1.9, -1.0, 0.42], deskMaterial);
+    addBox([4.5, 0.05, 0.08], [0, -0.28, 0.68], cyanMaterial);
+    addBox([0.08, 2.45, 0.08], [-3.04, 0.52, 0.65], pinkMaterial);
+    addBox([0.08, 2.45, 0.08], [3.04, 0.52, 0.65], cyanMaterial);
+
+    const windowGroup = new THREE.Group();
+    windowGroup.position.set(0, 0.95, -1.88);
+    roomGroup.add(windowGroup);
+    const windowPane = new THREE.Mesh(remember(new THREE.BoxGeometry(2.38, 1.52, 0.035)), glassMaterial);
+    windowGroup.add(windowPane);
+    const framePieces = [
+      [[2.55, 0.06, 0.08], [0, 0.78, 0.03]],
+      [[2.55, 0.06, 0.08], [0, -0.78, 0.03]],
+      [[0.06, 1.6, 0.08], [-1.27, 0, 0.03]],
+      [[0.06, 1.6, 0.08], [1.27, 0, 0.03]],
+      [[0.05, 1.5, 0.08], [0, 0, 0.04]]
+    ];
+    framePieces.forEach(([size, position]) => {
+      const frame = new THREE.Mesh(remember(new THREE.BoxGeometry(...size)), blackMaterial);
+      frame.position.set(...position);
+      windowGroup.add(frame);
+    });
+
+    const rainDrops = Array.from({ length: 42 }, () => {
+      const drop = new THREE.Mesh(remember(new THREE.BoxGeometry(0.012, 0.28, 0.012)), rainMaterial);
+      drop.position.set((Math.random() - 0.5) * 2.15, (Math.random() - 0.5) * 1.35, 0.08);
+      drop.rotation.z = -0.18;
+      windowGroup.add(drop);
+      return drop;
+    });
+
+    const makeScreen = (x, y, z, width, height, rotationY, glowMaterial) => {
+      const group = new THREE.Group();
+      group.position.set(x, y, z);
+      group.rotation.y = rotationY;
+      roomGroup.add(group);
+
+      const panel = new THREE.Mesh(remember(new THREE.BoxGeometry(width, height, 0.08)), screenMaterial);
+      group.add(panel);
+
+      const rim = new THREE.Mesh(remember(new THREE.BoxGeometry(width + 0.08, height + 0.08, 0.035)), blackMaterial);
+      rim.position.z = -0.04;
+      group.add(rim);
+
+      const lines = Array.from({ length: 8 }, (_, index) => {
+        const lineWidth = width * (0.38 + Math.random() * 0.38);
+        const line = new THREE.Mesh(remember(new THREE.BoxGeometry(lineWidth, 0.018, 0.025)), index % 3 === 0 ? pinkMaterial : glowMaterial);
+        line.position.set(-width * 0.18 + Math.random() * width * 0.25, height * 0.28 - index * height * 0.075, 0.065);
+        group.add(line);
+        return line;
+      });
+
+      return { group, lines };
+    };
+
+    const screens = [
+      makeScreen(-1.25, 0.42, 0.16, 1.35, 0.9, 0.22, cyanMaterial),
+      makeScreen(0.22, 0.52, 0.02, 1.6, 1.02, 0, violetMaterial),
+      makeScreen(1.72, 0.38, 0.14, 1.18, 0.82, -0.28, cyanMaterial),
+      makeScreen(0.2, -0.02, 0.42, 0.85, 0.48, -0.02, pinkMaterial)
+    ];
+
+    const keyboard = new THREE.Group();
+    keyboard.position.set(-0.35, -0.25, 0.66);
+    roomGroup.add(keyboard);
+    const keyMaterial = material({
+      color: 0x0d1320,
+      emissive: 0x0b4e67,
+      emissiveIntensity: 0.7,
+      metalness: 0.25,
+      roughness: 0.4
+    });
+    for (let row = 0; row < 3; row += 1) {
+      for (let col = 0; col < 9; col += 1) {
+        const key = new THREE.Mesh(remember(new THREE.BoxGeometry(0.12, 0.025, 0.08)), keyMaterial);
+        key.position.set(col * 0.15, 0, row * 0.11);
+        keyboard.add(key);
+      }
+    }
+    keyboard.rotation.x = -0.08;
+
+    const mug = new THREE.Group();
+    mug.position.set(1.7, -0.15, 0.62);
+    roomGroup.add(mug);
+    const mugBody = new THREE.Mesh(remember(new THREE.CylinderGeometry(0.17, 0.18, 0.34, 28, 1, true)), material({
+      color: 0x111827,
+      emissive: 0xff4fb8,
+      emissiveIntensity: 0.55,
+      metalness: 0.35,
+      roughness: 0.24
+    }));
+    mug.add(mugBody);
+    const handle = new THREE.Mesh(remember(new THREE.TorusGeometry(0.15, 0.026, 8, 30)), cyanMaterial);
+    handle.position.set(0.18, 0.02, 0);
+    handle.rotation.y = Math.PI / 2;
+    mug.add(handle);
+    const steam = Array.from({ length: 7 }, (_, index) => {
+      const puff = new THREE.Mesh(remember(new THREE.SphereGeometry(0.035 + index * 0.003, 12, 12)), steamMaterial);
+      puff.position.set((Math.random() - 0.5) * 0.16, 0.22 + index * 0.08, (Math.random() - 0.5) * 0.08);
+      mug.add(puff);
+      return puff;
+    });
+
+    const shoes = new THREE.Group();
+    shoes.position.set(-1.85, -0.98, 0.9);
+    shoes.rotation.set(0.08, -0.45, -0.04);
+    roomGroup.add(shoes);
+    const makeShoe = (x, z, accent) => {
+      const shoe = new THREE.Group();
+      shoe.position.set(x, 0, z);
+      const sole = new THREE.Mesh(remember(new THREE.BoxGeometry(0.72, 0.12, 0.24)), blackMaterial);
+      sole.position.y = -0.03;
+      shoe.add(sole);
+      const upper = new THREE.Mesh(remember(new THREE.BoxGeometry(0.48, 0.22, 0.25)), accent);
+      upper.position.set(-0.06, 0.09, 0);
+      upper.rotation.z = -0.13;
+      shoe.add(upper);
+      const toe = new THREE.Mesh(remember(new THREE.SphereGeometry(0.15, 18, 18)), accent);
+      toe.scale.set(1.45, 0.6, 0.74);
+      toe.position.set(0.33, 0.02, 0);
+      shoe.add(toe);
+      shoes.add(shoe);
+      return shoe;
+    };
+    const leftShoe = makeShoe(-0.2, 0.02, cyanMaterial);
+    const rightShoe = makeShoe(0.18, -0.18, pinkMaterial);
+    rightShoe.rotation.y = 0.18;
+
+    const medals = new THREE.Group();
+    medals.position.set(2.45, 0.92, -1.82);
+    roomGroup.add(medals);
+    const medalMeshes = Array.from({ length: 3 }, (_, index) => {
+      const ribbon = new THREE.Mesh(remember(new THREE.BoxGeometry(0.05, 0.72, 0.025)), index % 2 === 0 ? pinkMaterial : cyanMaterial);
+      ribbon.position.set(index * 0.28, 0.02, 0.07);
+      ribbon.rotation.z = index === 1 ? 0 : index === 0 ? 0.18 : -0.18;
+      medals.add(ribbon);
+
+      const medal = new THREE.Mesh(remember(new THREE.CylinderGeometry(0.115, 0.115, 0.035, 32)), medalMaterial);
+      medal.position.set(index * 0.28, -0.38, 0.1);
+      medal.rotation.x = Math.PI / 2;
+      medals.add(medal);
+      return medal;
+    });
+
+    const particleCount = 520;
     const positions = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount; i += 1) {
       const i3 = i * 3;
-      positions[i3] = (Math.random() - 0.5) * 9;
-      positions[i3 + 1] = (Math.random() - 0.5) * 7;
-      positions[i3 + 2] = (Math.random() - 0.5) * 7;
+      positions[i3] = (Math.random() - 0.5) * 6.5;
+      positions[i3 + 1] = (Math.random() - 0.5) * 3.8;
+      positions[i3 + 2] = (Math.random() - 0.5) * 3.4 + 0.35;
     }
-    const particlesGeometry = new THREE.BufferGeometry();
+    const particlesGeometry = remember(new THREE.BufferGeometry());
     particlesGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    const particlesMaterial = new THREE.PointsMaterial({
+    const particlesMaterial = remember(new THREE.PointsMaterial({
       color: 0xffffff,
-      size: 0.026,
+      size: 0.025,
       transparent: true,
-      opacity: 0.8
-    });
+      opacity: 0.78,
+      depthWrite: false
+    }));
     const particles = new THREE.Points(particlesGeometry, particlesMaterial);
-    scene.add(particles);
+    roomGroup.add(particles);
 
-    const shards = Array.from({ length: 7 }, (_, index) => {
-      const geometry = new THREE.TetrahedronGeometry(0.2 + Math.random() * 0.24, 0);
-      const material = new THREE.MeshStandardMaterial({
-        color: index % 2 === 0 ? 0xff4fb8 : 0x2cf7ff,
-        emissive: index % 2 === 0 ? 0x5b0a42 : 0x074b52,
-        emissiveIntensity: 0.9,
-        metalness: 0.5,
-        roughness: 0.2
-      });
-      const shard = new THREE.Mesh(geometry, material);
-      const angle = (index / 7) * Math.PI * 2;
-      shard.position.set(Math.cos(angle) * 3, Math.sin(angle) * 2.1, (Math.random() - 0.5) * 2);
-      scene.add(shard);
-      return shard;
-    });
+    const cursorOrb = new THREE.Mesh(
+      remember(new THREE.SphereGeometry(0.065, 18, 18)),
+      basic({ color: 0xffffff, transparent: true, opacity: 0.86 })
+    );
+    scene.add(cursorOrb);
 
     const resize = () => {
       const { width, height } = mount.getBoundingClientRect();
@@ -212,34 +338,59 @@ function HeroScene() {
       const x = ((event.clientX - bounds.left) / Math.max(bounds.width, 1)) * 2 - 1;
       const y = -(((event.clientY - bounds.top) / Math.max(bounds.height, 1)) * 2 - 1);
       pointer.set(x, y);
-      targetRotation.set(y * 0.26, x * 0.38);
+      targetRotation.set(y * 0.12, x * 0.18);
     };
 
     let frameId = 0;
     const clock = new THREE.Clock();
     const animate = () => {
       const elapsed = clock.getElapsedTime();
-      core.rotation.x = elapsed * 0.28;
-      core.rotation.y = elapsed * 0.5;
-      wire.rotation.x = -elapsed * 0.13;
-      wire.rotation.y = elapsed * 0.2;
-      accentGroup.rotation.x += (targetRotation.x - accentGroup.rotation.x) * 0.045;
-      accentGroup.rotation.y += (targetRotation.y - accentGroup.rotation.y) * 0.045;
-      cursorOrb.position.x += (pointer.x * 2.8 - cursorOrb.position.x) * 0.12;
-      cursorOrb.position.y += (pointer.y * 2.1 - cursorOrb.position.y) * 0.12;
-      cursorOrb.position.z = 1.6 + Math.sin(elapsed * 5) * 0.12;
-      runner.rotation.z = Math.sin(elapsed * 4) * 0.12;
-      shoe.rotation.y = -0.4 + Math.sin(elapsed * 1.8) * 0.28;
-      iceCream.rotation.y = elapsed * 0.5;
+
+      roomGroup.rotation.x += (targetRotation.x - roomGroup.rotation.x) * 0.04;
+      roomGroup.rotation.y += (targetRotation.y - roomGroup.rotation.y) * 0.04;
+      desk.position.y = -0.42 + Math.sin(elapsed * 1.1) * 0.01;
+
+      screens.forEach((screen, screenIndex) => {
+        screen.group.position.y += Math.sin(elapsed * 1.5 + screenIndex) * 0.0009;
+        screen.lines.forEach((line, lineIndex) => {
+          line.scale.x = 0.62 + Math.abs(Math.sin(elapsed * 2.4 + lineIndex + screenIndex)) * 0.48;
+          line.material.emissiveIntensity = 1.05 + Math.sin(elapsed * 3.2 + lineIndex) * 0.35;
+        });
+      });
+
+      rainDrops.forEach((drop, index) => {
+        drop.position.y -= 0.018 + (index % 5) * 0.003;
+        drop.position.x += Math.sin(elapsed * 2 + index) * 0.0008;
+        if (drop.position.y < -0.78) {
+          drop.position.y = 0.78;
+        }
+      });
+
+      steam.forEach((puff, index) => {
+        puff.position.y += 0.004 + index * 0.0004;
+        puff.position.x += Math.sin(elapsed * 1.8 + index) * 0.0016;
+        puff.scale.setScalar(0.78 + Math.sin(elapsed * 2.2 + index) * 0.18 + index * 0.05);
+        if (puff.position.y > 0.95) {
+          puff.position.y = 0.24;
+        }
+      });
+
+      leftShoe.rotation.y = Math.sin(elapsed * 1.2) * 0.08;
+      rightShoe.rotation.y = 0.18 + Math.sin(elapsed * 1.35 + 0.7) * 0.08;
+      medalMeshes.forEach((medal, index) => {
+        medal.rotation.z = Math.sin(elapsed * 1.6 + index) * 0.16;
+      });
+
       particles.rotation.y = elapsed * 0.025;
-      rings.forEach((ring, index) => {
-        ring.rotation.z = elapsed * (0.16 + index * 0.05);
-      });
-      shards.forEach((shard, index) => {
-        shard.rotation.x = elapsed * (0.4 + index * 0.03);
-        shard.rotation.y = elapsed * (0.3 + index * 0.04);
-        shard.position.y += Math.sin(elapsed * 1.5 + index) * 0.0018;
-      });
+      particles.position.y = Math.sin(elapsed * 0.9) * 0.035;
+      cyanLight.intensity = 3.8 + Math.sin(elapsed * 1.9) * 0.45;
+      pinkLight.intensity = 4.4 + Math.sin(elapsed * 1.6 + 1) * 0.5;
+      violetLight.intensity = 2.3 + Math.sin(elapsed * 1.4 + 2) * 0.25;
+
+      cursorOrb.position.x += (pointer.x * 2.7 - cursorOrb.position.x) * 0.12;
+      cursorOrb.position.y += (pointer.y * 2 - cursorOrb.position.y) * 0.12;
+      cursorOrb.position.z = 1.8 + Math.sin(elapsed * 5) * 0.12;
+
       renderer.render(scene, camera);
       frameId = requestAnimationFrame(animate);
     };
@@ -254,29 +405,7 @@ function HeroScene() {
       mount.removeEventListener("pointermove", handlePointerMove);
       cancelAnimationFrame(frameId);
       renderer.dispose();
-      coreGeometry.dispose();
-      coreMaterial.dispose();
-      wireGeometry.dispose();
-      wireMaterial.dispose();
-      ringMaterial.dispose();
-      rings.forEach((ring) => ring.geometry.dispose());
-      particlesGeometry.dispose();
-      particlesMaterial.dispose();
-      runnerMaterial.dispose();
-      shoeMaterial.dispose();
-      creamMaterial.dispose();
-      coneMaterial.dispose();
-      cursorMaterial.dispose();
-      shards.forEach((shard) => {
-        shard.geometry.dispose();
-        shard.material.dispose();
-      });
-      accentGroup.traverse((object) => {
-        if (object.geometry) {
-          object.geometry.dispose();
-        }
-      });
-      cursorOrb.geometry.dispose();
+      tracked.forEach((item) => item.dispose?.());
       mount.removeChild(renderer.domElement);
     };
   }, []);
