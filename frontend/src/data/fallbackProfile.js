@@ -21,7 +21,7 @@ export const fallbackProfile = {
     ],
   },
   stats: [
-    { label: "Current Role", value: "Fidelity" },
+    { label: "Current Role", value: "Fidelity Investments" },
     // { label: "CGPA", value: "8.69/10" },
     { label: "Experience", value: "2+ years" },
     { label: "Projects", value: "20+" },
