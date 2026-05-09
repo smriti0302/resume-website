@@ -372,6 +372,7 @@ button {
 
 .avatar {
   display: grid;
+  position: relative;
   width: 138px;
   height: 138px;
   place-items: center;
@@ -383,6 +384,60 @@ button {
   font-size: 4.5rem;
   font-weight: 900;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.42);
+}
+
+.avatar-photo {
+  isolation: isolate;
+  padding: 5px;
+  border: 1px solid rgba(44, 247, 255, 0.78);
+  background:
+    linear-gradient(135deg, rgba(44, 247, 255, 0.42), rgba(255, 79, 184, 0.22) 48%, rgba(247, 200, 95, 0.34)),
+    rgba(8, 6, 13, 0.9);
+  box-shadow:
+    0 0 0 1px rgba(255, 79, 184, 0.45),
+    10px 10px 0 rgba(255, 79, 184, 0.24),
+    -10px -10px 0 rgba(44, 247, 255, 0.16),
+    0 0 34px rgba(44, 247, 255, 0.38),
+    0 0 46px rgba(255, 79, 184, 0.25);
+  clip-path: polygon(0 11%, 11% 0, 100% 0, 100% 86%, 86% 100%, 0 100%);
+}
+
+.avatar-photo::before,
+.avatar-photo::after {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  content: "";
+}
+
+.avatar-photo::before {
+  inset: -1px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  clip-path: polygon(0 11%, 11% 0, 100% 0, 100% 86%, 86% 100%, 0 100%);
+}
+
+.avatar-photo::after {
+  right: -8px;
+  bottom: 18px;
+  width: 52px;
+  height: 3px;
+  background: var(--cyan);
+  box-shadow:
+    -72px -102px 0 var(--rose),
+    -96px -88px 0 rgba(247, 200, 95, 0.88);
+}
+
+.avatar-photo img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  object-fit: cover;
+  object-position: center 42%;
+  filter: saturate(1.08) contrast(1.04);
+  clip-path: polygon(0 10%, 10% 0, 100% 0, 100% 86%, 86% 100%, 0 100%);
 }
 
 .panel-label {

@@ -16,6 +16,7 @@ import {
   X
 } from "lucide-react";
 import HeroScene from "./HeroScene";
+import profilePhoto from "./assets/me.jpg";
 import { fallbackProfile } from "./data/fallbackProfile";
 
 const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -108,8 +109,8 @@ function App() {
               </a>
             </div>
             <aside className="profile-panel" aria-label="Profile summary">
-              <div className="avatar" aria-hidden="true">
-                {person.name.slice(0, 1)}
+              <div className="avatar avatar-photo">
+                <img src={profilePhoto} alt={person.name} />
               </div>
               <div>
                 <p className="panel-label">Based in</p>
