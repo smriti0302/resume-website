@@ -67,7 +67,7 @@ function App() {
       />
       <header className="site-header">
         <a className="brand" href="#home" aria-label="Smriti home">
-          <span>SR</span>
+          <span>SS</span>
           <strong>{person.name}</strong>
         </a>
 
