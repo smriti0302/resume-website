@@ -5,7 +5,7 @@ export const fallbackProfile = {
     location: "Bengaluru, India",
     email: "smriti030202@gmail.com",
     phone: "+91 79754 37934",
-    availability: "Software engineer, marathon runner, serial tinkerer",
+    availability: "Software engineer, marathon runner.",
     summary:
       "Computer Science graduate from PES University with experience building scalable, latency-conscious systems. I like turning real workflows into sharp software: trading tools, AI utilities, data systems, compiler tooling, and products that feel useful.",
     highlights: [
