@@ -71,7 +71,7 @@ function App() {
           <span>SS</span>
           <strong>{person.name}</strong>
         </a>
-Ī
+
         <nav className={menuOpen ? "nav nav-open" : "nav"} aria-label="Primary navigation">
           {navItems.map((item) => (
             <a key={item.href} href={item.href} onClick={() => setMenuOpen(false)}>

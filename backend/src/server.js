@@ -22,7 +22,6 @@ app.get("/api/projects", (_req, res) => {
 
 app.get("/api/blogs", (_req, res) => {
   res.json(profileData.blogs);
-  ī;
 });
 
 app.listen(port, () => {

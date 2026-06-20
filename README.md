@@ -18,7 +18,7 @@ npm install
 
 Start both apps:
 
-```bashī
+```bash
 npm run dev
 ```
 
