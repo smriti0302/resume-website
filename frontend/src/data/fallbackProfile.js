@@ -141,40 +141,46 @@ export const fallbackProfile = {
   ],
   blogs: [
     {
-      title: "Software Engineer, Fidelity Investments",
-      date: "Aug 2024 - Present",
-      excerpt:
-        "Building scalable, latency-optimized trading solutions using Java, Python, Golang, Angular, and React. Developed internal workstations, smart trade matching algorithms, trade execution microservices, and real-time workflows with protocol systems.",
+      title:
+        "Senior Data Engineer, AI and Enterprise Data, Fidelity Investments",
+      date: "Jun 2026 - Present",
+      excerpt: "",
+    },
+    {
+      title: "Software Engineer, Brokerage Technologies, Fidelity Investments",
+      date: "Aug 2024 - Jun 2026",
+      excerpt: "",
+      // "Building scalable, latency-optimized trading solutions using Java, Python, Golang, Angular, and React. Developed internal workstations, smart trade matching algorithms, trade execution microservices, and real-time workflows with protocol systems.",
     },
     {
       title: "Software Engineering Intern, Fidelity Investments",
       date: "Jan 2024 - Jun 2024",
-      excerpt:
-        "Designed a COBOL parser to modernize legacy mainframe systems. Generated intermediate representations for automated migration and applied graph algorithms to extract control-flow and dependency graphs.",
+      excerpt: "",
+      // "Designed a COBOL parser to modernize legacy mainframe systems. Generated intermediate representations for automated migration and applied graph algorithms to extract control-flow and dependency graphs.",
     },
     {
       title: "Summer Intern, Fidelity Investments",
       date: "Jun 2023 - Aug 2023",
-      excerpt:
-        "Enhanced backend and UI components for internal portfolio visualization tools using Angular and Java.",
+      excerpt: "",
+      // "Enhanced backend and UI components for internal portfolio visualization tools using Angular and Java.",
     },
     {
       title: "Research Intern, CDSAML, PES University",
       date: "Jun 2022 - Aug 2022",
-      excerpt:
-        "Worked in a research environment at PES University, strengthening applied machine learning, experimentation, and technical communication skills.",
+      excerpt: "",
+      // "Worked in a research environment at PES University, strengthening applied machine learning, experimentation, and technical communication skills.",
     },
     {
       title: "Math Subject Matter Expert, Athena Mentorship",
       date: "Jul 2021 - Jan 2022",
-      excerpt:
-        "Supported math learning and problem solving as a subject matter expert, translating complex concepts into clear explanations.",
+      excerpt: "",
+      // "Supported math learning and problem solving as a subject matter expert, translating complex concepts into clear explanations.",
     },
     {
       title: "Vice President, PES MUN Society",
       date: "Nov 2021 - Nov 2023",
-      excerpt:
-        "Led society initiatives, coordination, and communication as Vice President of PES MUN Society.",
+      excerpt: "",
+      // "Led society initiatives, coordination, and communication as Vice President of PES MUN Society.",
     },
   ],
   music: {
