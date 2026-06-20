@@ -7,7 +7,7 @@ export const fallbackProfile = {
     phone: "+91 79754 37934",
     availability: "Software engineer, marathon runner.",
     summary:
-      "Computer Science graduate from PES University with experience building scalable, latency-conscious systems. I like turning real workflows into sharp software: trading tools, AI utilities, data systems, compiler tooling, and products that feel useful.",
+      "Computer Science graduate from PES University with experience using tech to solve problems that people actually face. I like solving real-world problems through impactful software, not complexity for its own sake.",
     highlights: [
       "Java",
       "Python",
