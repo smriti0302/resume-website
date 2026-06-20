@@ -1,7 +1,7 @@
 export const fallbackProfile = {
   person: {
     name: "Smriti Sivakumar",
-    role: "Software Engineer",
+    role: "",
     location: "Bengaluru, India",
     email: "smriti030202@gmail.com",
     phone: "+91 79754 37934",
@@ -32,7 +32,7 @@ export const fallbackProfile = {
     values: [
       "Building scalable services and interfaces for trading, portfolio, and workflow systems",
       "Designing parsers, graph-based analysis, and migration tools for legacy modernization",
-      "Carrying a marathon runner's discipline into engineering: consistency, feedback loops, and steady improvement",
+      "Carrying a marathon runner's discipline into engineering: consistency and steady improvement",
     ],
     experience: [
       {
