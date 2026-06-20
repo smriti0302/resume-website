@@ -12,7 +12,9 @@ export const fallbackProfile = {
       "Java",
       "Python",
       "Golang",
-      "SQL",
+      "C++",
+      "C",
+      "postgreSQL",
       "Node.js",
       "React.js",
       "Angular",
@@ -20,6 +22,7 @@ export const fallbackProfile = {
       "Kafka",
       "GCP",
       "AWS",
+      "Jenkins",
       "Power Apps",
       "Power Automate",
       "Power BI",
@@ -33,7 +36,7 @@ export const fallbackProfile = {
   ],
   about: {
     intro:
-      "I build across backend systems, modern interfaces, data platforms, and AI workflows. My engineering taste leans toward strong foundations: graph algorithms, system design, performance, readable APIs, and user-facing tools that survive real usage.",
+      "I enjoy understanding how people work, identifying friction points, and building software that makes those workflows simpler, faster, and more effective.",
     values: [
       "Building scalable services and interfaces for trading, portfolio, and workflow systems",
       "Designing parsers, graph-based analysis, and migration tools for legacy modernization",
