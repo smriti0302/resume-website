@@ -29,7 +29,7 @@ export const fallbackProfile = {
     ],
   },
   stats: [
-    { label: "Current Role", value: "Fidelity Investments" },
+    { label: "Current Role", value: "Senior Data Engineer" },
     // { label: "CGPA", value: "8.69/10" },
     { label: "Experience", value: "2+ years" },
     { label: "Projects", value: "20+" },
