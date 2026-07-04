@@ -18,6 +18,7 @@ export const fallbackProfile = {
       "Node.js",
       "React.js",
       "Angular",
+      "Three js",
       "Spring Boot",
       "Kafka",
       "GCP",
@@ -38,13 +39,13 @@ export const fallbackProfile = {
     intro:
       "I enjoy understanding how people work, identifying friction points, and building software that makes those workflows simpler, faster, and more effective.",
     values: [
-      "Building scalable services and interfaces for trading, portfolio, and workflow systems",
-      "Designing parsers, graph-based analysis, and migration tools for legacy modernization",
+      "Building scalable end to end applications and interfaces for any workflows",
+      "Designing parsers, graph-based analysis, and ML tools for legacy modernization",
       "Carrying a marathon runner's discipline into engineering: consistency and steady improvement",
     ],
     experience: [
       {
-        title: "Software Engineer, Fidelity Investments",
+        title: "Senior Data Engineer, Fidelity Investments",
         body: "Building latency-optimized trading systems with Java, Python, Golang, Angular, including workstations, trade matching, microservices, and real-time workflows.",
       },
       {
@@ -75,6 +76,14 @@ export const fallbackProfile = {
       link: "#",
     },
     {
+      title: "Bulk Trade Operations Platform",
+      type: "Enterprise Trading",
+      description:
+        "Designed and built bulk trade operations and large-scale block management with Angular interfaces, Spring Boot microservices, validations, batch processing, and optimized SQL.",
+      stack: ["Angular", "Spring Boot", "SQL", "Microservices"],
+      link: "#",
+    },
+    {
       title: "COBOL to Python Transpiler",
       type: "Compiler Tooling",
       description:
@@ -91,20 +100,12 @@ export const fallbackProfile = {
       link: "ai.6amyoga.com",
     },
     {
-      title: "Bulk Trade Operations Platform",
-      type: "Enterprise Trading",
-      description:
-        "Designed and built bulk trade operations and large-scale block management with Angular interfaces, Spring Boot microservices, validations, batch processing, and optimized SQL.",
-      stack: ["Angular", "Spring Boot", "SQL", "Microservices"],
-      link: "#",
-    },
-    {
       title: "AI.6AMYOGA",
       type: "AI Fitness",
       description:
         "Built an AI-powered yoga platform where instructors create DRM-protected playlists, students receive Pose Landmark posture feedback and scores, and live class mode synchronizes playback for every student in real time.",
       stack: ["React", "Node.js", "Go", "Python", "GCP"],
-      link: "ai.6amyoga.com",
+      link: "https://ai.6amyoga.com",
     },
     {
       title: "Reddit Data Analyzer",
